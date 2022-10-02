@@ -1,0 +1,68 @@
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod tidy
+    - ./scripts/completions.sh
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+      - goos: windows
+        goarch: arm
+    ldflags:
+      - -s -w -X main.version={{.Version}}
+archives:
+  - name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      windows: Windows
+      386: i386
+      amd64: x86_64
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - completions/*  
+checksum:
+  name_template: '{{ .ProjectName }}_checksums.txt'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch
+      - go mod tidy
+nfpms:
+  - file_name_template: '{{ .ProjectName }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
+    homepage:  https://github.com/hupe1980/gopherfy
+    maintainer: Frank Hübner <frankhuebner1980@gmail.com>
+    description: Tool to generate gopher links for exploiting SSRF
+    license: MIT
+    contents:
+      - src: ./completions/gopherfy.bash
+        dst: /etc/bash_completion.d/gopherfy
+      - src: ./completions/gopherfy.fish
+        dst: /usr/share/fish/completions/gopherfy.fish
+      - src: ./completions/gopherfy.zsh
+        dst: /usr/local/share/zsh/site-functions/_gopherfy
+    formats:
+    - apk
+    - deb
+    - rpm
