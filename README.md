@@ -1,3 +1,51 @@
 # gopherfy
-Tool to generate gopher links for exploiting SSRF
+![Build Status](https://github.com/hupe1980/gopherfy/workflows/build/badge.svg) 
+[![Go Reference](https://pkg.go.dev/badge/github.com/hupe1980/gopherfy.svg)](https://pkg.go.dev/github.com/hupe1980/gopherfy)
+> Tool to generate gopher links for exploiting SSRF
+
+## How to use
+```
+Usage:
+  gopherfy [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  help        Help about any command
+  http        Generate http gopher link
+  mysql       Generate mysql gopher link
+  smtp        Generate smtp gopher link
+
+Flags:
+  -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+  -h, --help             help for gopherfy
+  -v, --version          version for gopherfy
+
+Use "gopherfy [command] --help" for more information about a command.
+```
+
+## HTTP
+
+```
+Generate http gopher link
+
+Usage:
+  gopherfy http [flags]
+
+Examples:
+gopherfy http -a 169.254.169.254:80 -p /latest/api/token -X PUT -H X-aws-ec2-metadata-token-ttl-seconds=21600
+
+Flags:
+  -a, --addr string             http address (default "127.0.0.1:80")
+  -H, --header stringToString   http header value (key=value) (default [])
+  -h, --help                    help for http
+  -p, --path string             http path (default "/")
+  -X, --request string          http request method (default "GET")
+  -A, --user-agent string       http user agent (default "gopherfy")
+  -V, --version string          http protocol version (default "HTTP/1.0")
+
+Global Flags:
+  -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+```
+## License
+[MIT](LICENCE)
 

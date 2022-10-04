@@ -22,6 +22,7 @@ func NewHTTPCmd(encoder *string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:           "http",
 		Short:         "Generate http gopher link",
+		Example:       `gopherfy http -a 169.254.169.254:80 -p /latest/api/token -X PUT -H X-aws-ec2-metadata-token-ttl-seconds=21600`,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -50,7 +51,7 @@ func NewHTTPCmd(encoder *string) *cobra.Command {
 	cmd.Flags().StringVarP(&opts.version, "version", "V", http.DefaultVersion, "http protocol version")
 	cmd.Flags().StringVarP(&opts.path, "path", "p", http.DefaultPath, "http path")
 	cmd.Flags().StringVarP(&opts.userAgent, "user-agent", "A", http.DefaultUserAgent, "http user agent")
-	cmd.Flags().StringToStringVarP(&opts.headers, "header", "", nil, "http header value (key=value)")
+	cmd.Flags().StringToStringVarP(&opts.headers, "header", "H", nil, "http header value (key=value)")
 
 	return cmd
 }

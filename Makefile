@@ -26,7 +26,7 @@ ci: build test
 .PHONY: run
 ## run: Runs gopherfy
 run:
-	go run main.go http -a 127.0.0.1:8080 -p "/get.php"
+	go run main.go http -h
 
 .PHONY: help
 ## help: Prints this help message
