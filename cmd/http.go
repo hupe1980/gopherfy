@@ -13,6 +13,7 @@ type httpOptions struct {
 	version   string
 	path      string
 	userAgent string
+	headers   map[string]string
 }
 
 func NewHTTPCmd(encoder *string) *cobra.Command {
@@ -30,6 +31,7 @@ func NewHTTPCmd(encoder *string) *cobra.Command {
 				o.Version = opts.version
 				o.Path = opts.path
 				o.UserAgent = opts.userAgent
+				o.ExtraHeaders = opts.headers
 			})
 
 			payload := encodePayload(*encoder, http.Payload())
@@ -48,6 +50,7 @@ func NewHTTPCmd(encoder *string) *cobra.Command {
 	cmd.Flags().StringVarP(&opts.version, "version", "V", http.DefaultVersion, "http protocol version")
 	cmd.Flags().StringVarP(&opts.path, "path", "p", http.DefaultPath, "http path")
 	cmd.Flags().StringVarP(&opts.userAgent, "user-agent", "A", http.DefaultUserAgent, "http user agent")
+	cmd.Flags().StringToStringVarP(&opts.headers, "header", "", nil, "http header value (key=value)")
 
 	return cmd
 }

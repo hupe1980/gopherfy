@@ -3,6 +3,7 @@ package http
 import (
 	"bytes"
 	"fmt"
+	gohttp "net/http"
 	"strings"
 
 	"github.com/hupe1980/gopherfy/internal"
@@ -17,21 +18,23 @@ const (
 )
 
 type Options struct {
-	Addr      string
-	Method    string
-	Version   string
-	Path      string
-	UserAgent string
-	NewLine   string
+	Addr         string
+	Method       string
+	Version      string
+	Path         string
+	UserAgent    string
+	ExtraHeaders map[string]string
+	NewLine      string
 }
 
 type HTTP struct {
-	addr      string
-	method    string
-	version   string
-	path      string
-	userAgent string
-	newLine   string
+	addr         string
+	method       string
+	version      string
+	path         string
+	userAgent    string
+	extraHeaders map[string]string
+	newLine      string
 }
 
 func NewHTTP(optFns ...func(o *Options)) *HTTP {
@@ -49,12 +52,13 @@ func NewHTTP(optFns ...func(o *Options)) *HTTP {
 	}
 
 	return &HTTP{
-		addr:      strings.TrimSpace(options.Addr),
-		method:    strings.TrimSpace(options.Method),
-		version:   strings.TrimSpace(options.Version),
-		path:      internal.URLEncode(strings.TrimSpace(options.Path)),
-		userAgent: strings.TrimSpace(options.UserAgent),
-		newLine:   options.NewLine,
+		addr:         strings.TrimSpace(options.Addr),
+		method:       strings.TrimSpace(options.Method),
+		version:      strings.TrimSpace(options.Version),
+		path:         internal.URLEncode(strings.TrimSpace(options.Path)),
+		userAgent:    strings.TrimSpace(options.UserAgent),
+		extraHeaders: options.ExtraHeaders,
+		newLine:      options.NewLine,
 	}
 }
 
@@ -75,6 +79,10 @@ func (http *HTTP) generateHeaders() string {
 	headers["User-Agent"] = http.userAgent
 	headers["Accept"] = "*/*"
 
+	for k, v := range http.extraHeaders {
+		headers[k] = v
+	}
+
 	b := new(bytes.Buffer)
 
 	for key, value := range headers {
@@ -82,7 +90,7 @@ func (http *HTTP) generateHeaders() string {
 			continue
 		}
 
-		fmt.Fprintf(b, "%s:%%20%s%s", key, value, http.newLine)
+		fmt.Fprintf(b, "%s:%%20%s%s", gohttp.CanonicalHeaderKey(key), value, http.newLine)
 	}
 
 	return b.String()
