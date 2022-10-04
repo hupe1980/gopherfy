@@ -16,12 +16,12 @@ type smtpOptions struct {
 	msg     string
 }
 
-func NewSMTPCmd() *cobra.Command {
+func NewSMTPCmd(encoder *string) *cobra.Command {
 	opts := &smtpOptions{}
 
 	cmd := &cobra.Command{
 		Use:           "smtp",
-		Short:         "Genrate smtp gopher link",
+		Short:         "Generate smtp gopher link",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
@@ -29,7 +29,9 @@ func NewSMTPCmd() *cobra.Command {
 				o.Addr = opts.addr
 			})
 
-			fmt.Println(smtp.Payload())
+			payload := encodePayload(*encoder, smtp.Payload())
+
+			fmt.Println(payload)
 
 			return nil
 		},

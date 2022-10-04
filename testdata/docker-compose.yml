@@ -1,0 +1,8 @@
+version: "3.2"
+services:
+  http:
+    build:
+      context: http 
+      dockerfile: Dockerfile
+    ports:
+      - '8080:80'

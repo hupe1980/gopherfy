@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/hupe1980/gopherfy/internal"
 	"github.com/spf13/cobra"
 )
 
@@ -16,6 +17,10 @@ func Execute(version string) {
 }
 
 func newRootCmd(version string) *cobra.Command {
+	var (
+		encoder string
+	)
+
 	cmd := &cobra.Command{
 		Use:           "gopherfy",
 		Version:       version,
@@ -23,12 +28,24 @@ func newRootCmd(version string) *cobra.Command {
 		SilenceErrors: true,
 	}
 
+	cmd.PersistentFlags().StringVarP(&encoder, "encoder", "e", "none", `the encoder to use. allowed: "base64", "url" or "none"`)
+
 	cmd.AddCommand(
-		NewHTTPCmd(),
-		NewMySQLCmd(),
-		NewPostgreSQLCmd(),
-		NewSMTPCmd(),
+		NewHTTPCmd(&encoder),
+		NewMySQLCmd(&encoder),
+		NewSMTPCmd(&encoder),
 	)
 
 	return cmd
+}
+
+func encodePayload(encoder, payload string) string {
+	switch encoder {
+	case "base64":
+		return internal.Base64UrlSafeEncode(payload)
+	case "url":
+		return internal.URLEncode(payload)
+	default:
+		return payload
+	}
 }

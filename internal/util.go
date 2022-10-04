@@ -2,6 +2,8 @@ package internal
 
 import (
 	"bytes"
+	"encoding/base64"
+	"net/url"
 	"sort"
 )
 
@@ -27,4 +29,12 @@ func InsertNth(s string, r rune, n int) string {
 	}
 
 	return buffer.String()
+}
+
+func URLEncode(input string) string {
+	return url.QueryEscape(input)
+}
+
+func Base64UrlSafeEncode(input string) string {
+	return base64.URLEncoding.EncodeToString([]byte(input))
 }

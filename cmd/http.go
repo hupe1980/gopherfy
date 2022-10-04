@@ -8,33 +8,46 @@ import (
 )
 
 type httpOptions struct {
-	addr    string
-	method  string
-	version string
+	addr      string
+	method    string
+	version   string
+	path      string
+	userAgent string
 }
 
-func NewHTTPCmd() *cobra.Command {
+func NewHTTPCmd(encoder *string) *cobra.Command {
 	opts := &httpOptions{}
 
 	cmd := &cobra.Command{
 		Use:           "http",
-		Short:         "Genrate http gopher link",
+		Short:         "Generate http gopher link",
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			http := http.NewHTTP(func(o *http.Options) {
 				o.Addr = opts.addr
+				o.Method = opts.method
+				o.Version = opts.version
+				o.Path = opts.path
+				o.UserAgent = opts.userAgent
 			})
 
-			fmt.Println(http.Payload())
+			payload := encodePayload(*encoder, http.Payload())
+
+			fmt.Println(payload)
 
 			return nil
 		},
 	}
 
+	// -H --header
+	// -d --data
+	// -c --cookie
 	cmd.Flags().StringVarP(&opts.addr, "addr", "a", http.DefaultAddr, "http address")
-	cmd.Flags().StringVarP(&opts.method, "method", "X", http.DefaultMethod, "http method")
-	cmd.Flags().StringVarP(&opts.version, "version", "V", http.DefaultMethod, "http version")
+	cmd.Flags().StringVarP(&opts.method, "request", "X", http.DefaultMethod, "http request method")
+	cmd.Flags().StringVarP(&opts.version, "version", "V", http.DefaultVersion, "http protocol version")
+	cmd.Flags().StringVarP(&opts.path, "path", "p", http.DefaultPath, "http path")
+	cmd.Flags().StringVarP(&opts.userAgent, "user-agent", "A", http.DefaultUserAgent, "http user agent")
 
 	return cmd
 }
