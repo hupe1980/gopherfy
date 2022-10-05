@@ -25,7 +25,6 @@ Use "gopherfy [command] --help" for more information about a command.
 ```
 
 ## HTTP
-
 ```
 Generate http gopher link
 
@@ -39,10 +38,46 @@ Flags:
   -a, --addr string             http address (default "127.0.0.1:80")
   -H, --header stringToString   http header value (key=value) (default [])
   -h, --help                    help for http
+  -V, --http-version string     http protocol version (default "HTTP/1.0")
   -p, --path string             http path (default "/")
   -X, --request string          http request method (default "GET")
   -A, --user-agent string       http user agent (default "gopherfy")
-  -V, --version string          http protocol version (default "HTTP/1.0")
+
+Global Flags:
+  -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+```
+
+## MySQL
+```
+Generate mysql gopher link
+
+Usage:
+  gopherfy mysql [flags]
+
+Flags:
+  -a, --addr string    mysql address (default "127.0.0.1:3306")
+  -d, --db string      mysql database name
+  -h, --help           help for mysql
+  -q, --query string   mysql query
+  -u, --user string    mysql username (default "root")
+
+Global Flags:
+  -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+```
+
+## PostgreSQL
+```
+Generate postgres gopher link
+
+Usage:
+  gopherfy postgres [flags]
+
+Flags:
+  -a, --addr string    postgres address (default "127.0.0.1:5432")
+  -d, --db string      postgres database name
+  -h, --help           help for postgres
+  -q, --query string   postgres query
+  -u, --user string    postgres username (default "postgres")
 
 Global Flags:
   -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")

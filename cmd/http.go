@@ -48,7 +48,7 @@ func newHTTPCmd(encoder *string) *cobra.Command {
 	// -c --cookie
 	cmd.Flags().StringVarP(&opts.addr, "addr", "a", http.DefaultAddr, "http address")
 	cmd.Flags().StringVarP(&opts.method, "request", "X", http.DefaultMethod, "http request method")
-	cmd.Flags().StringVarP(&opts.version, "version", "V", http.DefaultVersion, "http protocol version")
+	cmd.Flags().StringVarP(&opts.version, "http-version", "V", http.DefaultVersion, "http protocol version")
 	cmd.Flags().StringVarP(&opts.path, "path", "p", http.DefaultPath, "http path")
 	cmd.Flags().StringVarP(&opts.userAgent, "user-agent", "A", http.DefaultUserAgent, "http user agent")
 	cmd.Flags().StringToStringVarP(&opts.headers, "header", "H", nil, "http header value (key=value)")
