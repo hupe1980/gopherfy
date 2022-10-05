@@ -16,7 +16,7 @@ type smtpOptions struct {
 	msg     string
 }
 
-func NewSMTPCmd(encoder *string) *cobra.Command {
+func newSMTPCmd(encoder *string) *cobra.Command {
 	opts := &smtpOptions{}
 
 	cmd := &cobra.Command{

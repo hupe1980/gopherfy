@@ -78,7 +78,11 @@ func (my *MySQL) generateQuery() string {
 }
 
 func (my *MySQL) generateAuth() string {
+	// Server capabilities (lower 2 bytes)
 	flags := clientFlag(0xf7fe)
+
+	// Extended server capabilities (upper 2 bytes)
+	flags |= clientFlag(0x81ff << 16)
 
 	// Adjust client flags based on server support
 	clientFlags := clientProtocol41 |
@@ -92,13 +96,42 @@ func (my *MySQL) generateAuth() string {
 
 	pktLen := 4 + 4 + 1 + 23 + len(my.user) + 1 + 1 + 21 + 1
 
+	var connectAttrsBuf []byte
+
+	if flags&clientConnectAttrs != 0 {
+		clientFlags |= clientConnectAttrs
+
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("_os"))
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("Linux"))
+
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("_client_name"))
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("libmysql"))
+
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("_pid"))
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("27255"))
+
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("_client_version"))
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("5.7.22"))
+
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("_platform"))
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("x86_64"))
+
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("program_name"))
+		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("mysql"))
+	}
+
 	// To specify a db name
 	if n := len(my.db); n > 0 {
 		clientFlags |= clientConnectWithDB
 		pktLen += n + 1
 	}
 
-	data := make([]byte, pktLen+4)
+	var data []byte
+	if clientFlags&clientConnectAttrs != 0 {
+		data = make([]byte, pktLen+4+len(connectAttrsBuf)+1)
+	} else {
+		data = make([]byte, pktLen+4)
+	}
 
 	data[0] = byte(pktLen + 103)
 	data[1] = byte(pktLen >> 8)
@@ -148,5 +181,12 @@ func (my *MySQL) generateAuth() string {
 	data[pos] = 0x00
 	pos++
 
-	return fmt.Sprintf("%x", data[:pos]) + "66035f6f73054c696e75780c5f636c69656e745f6e616d65086c69626d7973716c045f7069640532373235350f5f636c69656e745f76657273696f6e06352e372e3232095f706c6174666f726d067838365f36340c70726f6772616d5f6e616d65056d7973716c"
+	// connection attributes
+	if clientFlags&clientConnectAttrs != 0 {
+		data[pos] = byte(len(connectAttrsBuf))
+		pos++
+		pos += copy(data[pos:], connectAttrsBuf)
+	}
+
+	return fmt.Sprintf("%x", data[:pos])
 }

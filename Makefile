@@ -26,7 +26,7 @@ ci: build test
 .PHONY: run
 ## run: Runs gopherfy
 run:
-	go run main.go http -h
+	go run main.go -h
 
 .PHONY: help
 ## help: Prints this help message

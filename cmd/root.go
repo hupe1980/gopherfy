@@ -31,9 +31,10 @@ func newRootCmd(version string) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&encoder, "encoder", "e", "none", `the encoder to use. allowed: "base64", "url" or "none"`)
 
 	cmd.AddCommand(
-		NewHTTPCmd(&encoder),
-		NewMySQLCmd(&encoder),
-		NewSMTPCmd(&encoder),
+		newHTTPCmd(&encoder),
+		newMySQLCmd(&encoder),
+		newSMTPCmd(&encoder),
+		newPostgresCmd(&encoder),
 	)
 
 	return cmd

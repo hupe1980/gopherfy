@@ -13,6 +13,7 @@ Available Commands:
   help        Help about any command
   http        Generate http gopher link
   mysql       Generate mysql gopher link
+  postgres    Generate postgres gopher link
   smtp        Generate smtp gopher link
 
 Flags:
@@ -48,4 +49,3 @@ Global Flags:
 ```
 ## License
 [MIT](LICENCE)
-

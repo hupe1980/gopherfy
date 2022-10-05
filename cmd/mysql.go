@@ -14,7 +14,7 @@ type mySQLOptions struct {
 	query string
 }
 
-func NewMySQLCmd(encoder *string) *cobra.Command {
+func newMySQLCmd(encoder *string) *cobra.Command {
 	opts := &mySQLOptions{}
 
 	cmd := &cobra.Command{

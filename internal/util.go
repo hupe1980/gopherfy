@@ -31,10 +31,15 @@ func InsertNth(s string, r rune, n int) string {
 	return buffer.String()
 }
 
-func URLEncode(input string) string {
-	return url.QueryEscape(input)
+func URLEncode(str string) string {
+	return url.QueryEscape(str)
 }
 
-func Base64UrlSafeEncode(input string) string {
-	return base64.URLEncoding.EncodeToString([]byte(input))
+func Base64UrlSafeEncode(str string) string {
+	return base64.URLEncoding.EncodeToString([]byte(str))
+}
+
+func AppendLengthEncodedString(b []byte, str []byte) []byte {
+	b = append(b, byte(uint64(len(str))))
+	return append(b, str...)
 }

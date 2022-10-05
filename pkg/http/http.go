@@ -53,7 +53,7 @@ func NewHTTP(optFns ...func(o *Options)) *HTTP {
 
 	return &HTTP{
 		addr:         strings.TrimSpace(options.Addr),
-		method:       strings.TrimSpace(options.Method),
+		method:       strings.ToUpper(strings.TrimSpace(options.Method)),
 		version:      strings.TrimSpace(options.Version),
 		path:         internal.URLEncode(strings.TrimSpace(options.Path)),
 		userAgent:    strings.TrimSpace(options.UserAgent),

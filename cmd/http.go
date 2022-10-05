@@ -16,7 +16,7 @@ type httpOptions struct {
 	headers   map[string]string
 }
 
-func NewHTTPCmd(encoder *string) *cobra.Command {
+func newHTTPCmd(encoder *string) *cobra.Command {
 	opts := &httpOptions{}
 
 	cmd := &cobra.Command{
