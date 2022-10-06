@@ -74,23 +74,24 @@ func (http *HTTP) Payload() string {
 }
 
 func (http *HTTP) generateHeaders() string {
-	headers := make(map[string]string)
-	headers["Host"] = http.addr
-	headers["User-Agent"] = http.userAgent
-	headers["Accept"] = "*/*"
+	headers := internal.NewInsertionOrderMap()
+	headers.Set("Host", http.addr)
+	headers.Set("User-Agent", http.userAgent)
+	headers.Set("Accept", "*/*")
 
 	for k, v := range http.extraHeaders {
-		headers[k] = v
+		headers.Set(k, v)
 	}
 
 	b := new(bytes.Buffer)
 
-	for key, value := range headers {
-		if value == "" {
+	for _, k := range headers.Keys() {
+		v, found := headers.Get(k)
+		if !found || v == "" {
 			continue
 		}
 
-		fmt.Fprintf(b, "%s:%%20%s%s", gohttp.CanonicalHeaderKey(key), value, http.newLine)
+		fmt.Fprintf(b, "%s:%%20%s%s", gohttp.CanonicalHeaderKey(k), v, http.newLine)
 	}
 
 	return b.String()

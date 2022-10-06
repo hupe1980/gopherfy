@@ -118,6 +118,8 @@ func (my *MySQL) generateAuth() string {
 
 		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("program_name"))
 		connectAttrsBuf = internal.AppendLengthEncodedString(connectAttrsBuf, []byte("mysql"))
+
+		pktLen += len(connectAttrsBuf) + 1
 	}
 
 	// To specify a db name
@@ -126,14 +128,9 @@ func (my *MySQL) generateAuth() string {
 		pktLen += n + 1
 	}
 
-	var data []byte
-	if clientFlags&clientConnectAttrs != 0 {
-		data = make([]byte, pktLen+4+len(connectAttrsBuf)+1)
-	} else {
-		data = make([]byte, pktLen+4)
-	}
+	data := make([]byte, pktLen+4)
 
-	data[0] = byte(pktLen + 103)
+	data[0] = byte(pktLen)
 	data[1] = byte(pktLen >> 8)
 	data[2] = byte(pktLen >> 16)
 
