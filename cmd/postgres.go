@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/hupe1980/gopherfy/pkg/postgres"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +12,7 @@ type postgresOptions struct {
 	query string
 }
 
-func newPostgresCmd(encoder *string) *cobra.Command {
+func newPostgresCmd(globalOpts *globalOptions) *cobra.Command {
 	opts := &postgresOptions{}
 
 	cmd := &cobra.Command{
@@ -30,11 +28,9 @@ func newPostgresCmd(encoder *string) *cobra.Command {
 				o.Query = opts.query
 			})
 
-			payload := encodePayload(*encoder, postgres.Payload())
+			payload := encodePayload(globalOpts.encoder, postgres.Payload())
 
-			fmt.Println(payload)
-
-			return nil
+			return output(payload, globalOpts.send)
 		},
 	}
 

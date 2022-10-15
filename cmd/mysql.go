@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/hupe1980/gopherfy/pkg/mysql"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +12,7 @@ type mySQLOptions struct {
 	query string
 }
 
-func newMySQLCmd(encoder *string) *cobra.Command {
+func newMySQLCmd(globalOpts *globalOptions) *cobra.Command {
 	opts := &mySQLOptions{}
 
 	cmd := &cobra.Command{
@@ -31,11 +29,9 @@ func newMySQLCmd(encoder *string) *cobra.Command {
 				o.Query = opts.query
 			})
 
-			payload := encodePayload(*encoder, mysql.Payload())
+			payload := encodePayload(globalOpts.encoder, mysql.Payload())
 
-			fmt.Println(payload)
-
-			return nil
+			return output(payload, globalOpts.send)
 		},
 	}
 

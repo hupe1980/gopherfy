@@ -6,3 +6,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - '8080:80'
+  fastcgi:
+    build:
+      context: fastcgi 
+      dockerfile: Dockerfile
+    ports:
+      - '9000:9000'

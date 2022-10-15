@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/hupe1980/gopherfy/pkg/smtp"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +14,7 @@ type smtpOptions struct {
 	msg     string
 }
 
-func newSMTPCmd(encoder *string) *cobra.Command {
+func newSMTPCmd(globalOpts *globalOptions) *cobra.Command {
 	opts := &smtpOptions{}
 
 	cmd := &cobra.Command{
@@ -29,11 +27,9 @@ func newSMTPCmd(encoder *string) *cobra.Command {
 				o.Addr = opts.addr
 			})
 
-			payload := encodePayload(*encoder, smtp.Payload())
+			payload := encodePayload(globalOpts.encoder, smtp.Payload())
 
-			fmt.Println(payload)
-
-			return nil
+			return output(payload, globalOpts.send)
 		},
 	}
 

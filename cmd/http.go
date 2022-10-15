@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/hupe1980/gopherfy/pkg/http"
 	"github.com/spf13/cobra"
 )
@@ -16,7 +14,7 @@ type httpOptions struct {
 	headers   map[string]string
 }
 
-func newHTTPCmd(encoder *string) *cobra.Command {
+func newHTTPCmd(globalOpts *globalOptions) *cobra.Command {
 	opts := &httpOptions{}
 
 	cmd := &cobra.Command{
@@ -35,11 +33,9 @@ func newHTTPCmd(encoder *string) *cobra.Command {
 				o.ExtraHeaders = opts.headers
 			})
 
-			payload := encodePayload(*encoder, http.Payload())
+			payload := encodePayload(globalOpts.encoder, http.Payload())
 
-			fmt.Println(payload)
-
-			return nil
+			return output(payload, globalOpts.send)
 		},
 	}
 
